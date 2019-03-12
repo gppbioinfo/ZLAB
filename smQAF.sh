@@ -42,8 +42,8 @@ if [ $# -ge 2 ]; then
 				  ts=$((ts+=10))						 						 	
 					outfile=`echo $rfile | sed -e 's/.gz//g'`
 					printf "\nJob is still running, %d%s completed\n" "$ts" "$pss"							
-					zcat $rfile | fastq_quality_filter -q 25 -p 70 | fastx_clipper -l 16 -a $adp -M 10 | fastx_trimmer -f 2 -m 18 | fastx_trimmer -t 2 -m 18 | fastx_collapser -o $outfile\.fa																		printf "\nJob is 100%s completed!\n" "$pss"																																			 						 
+					zcat $rfile | fastq_quality_filter -q 25 -p 70 | fastx_clipper -l 16 -a $adp -M 10 | fastx_trimmer -f 2 -m 18 | fastx_trimmer -t 2 -m 18 | fastx_collapser -o $outfile\.fa																		
+					printf "\nJob is 100%s completed!\n" "$pss"																																			 						 
 				done	
-	 fi
-	 
+	 fi	 
 fi 
