@@ -1,13 +1,8 @@
 #!/bin/bash
 
-
-if [ $# -lt 3 ]; then
-	printf "Usage:\n\nsmall RNA-Seq reads quality control and filtering\n \n"$0" input_dir fastq/gz quality_score quality_score [minLen(10-16, default:16)] [adaptor(default:TGGAATTCTCGGGTGCCAAGG)] [leftTrim(0-5, default:2)] [rightTrim(0-5, default:2) ]\n";
-	printf "Detail options:\nLeft trim read from 5' end upto 5bp\n";
-	printf "Right trim read from 5' end upto 5bp\n\n";	
-	exit;
-fi
-
+##############################################
+# Developed by Ganesh Panzade, ZLAB
+##############################################
 
 indir=$1   # Read file input directory given on command line
 ext=$2
@@ -17,31 +12,38 @@ mrl=$5
 adp=$6
 ltrim=$7
 rtrim=$8
-
-
-if[ $3 -ge 3]; then
+gzc="gz"
 
 
 
-for i in $(ls $indir)
-do
-
-printf "Started quality assessment and filtering for "$i"\n"
-inputfolder=`echo $i | sed 's/\//\t/' | awk '{print $1}'`
-inputfile=`echo $i | sed 's/\//\t/' | awk '{print $2}'`
-outfile=`echo $inputfile | sed -e 's/.gz//g'`
-
-
-zcat $i | fastq_quality_filter -q 25 -p 70 | fastx_clipper -l 16 -a TGGAATTCTCGGGTGCCAAGG -M 10 | fastx_trimmer -f 5 -m 18 | fastx_trimmer -t 4 -m 18 > $inputfolder/$outfile
-zcat $i | fastq_quality_filter -q 25 -p 70 | fastx_clipper -l 16 -a TGGAATTCTCGGGTGCCAAGG -M 10 | fastx_trimmer -f 5 -m 18 > $inputfolder/$outfile
-
-fastx_collapser -i $inputfolder/$outfile -o $smRead/collapse/$outfile
-
-#fastqc -o $smRead/FQC --contaminants $smRead/contaminant_list.txt --adapters $smRead/adapter_list.txt $inputfolder/$outfile -t 2
-
-
-printf "Completed\n"
-
-done
-
+if [ $# -le 1 ]; then
+	se	
+	printf "Usage:\n\nsmall RNA-Seq reads quality control and filtering\n \n"$0" \nCompulsory option:\n input_dir\n fastq/gz\n quality_score\n quality_thresholds\n [minLen(10-16, default:16)]\n [adaptor(default:TGGAATTCTCGGGTGCCAAGG)]\n [leftTrim(0-5, default:2)] [rightTrim(0-5, default:2) ]\n";
+	printf "Detail options:\n Left trim read from 5' end upto 5bp\n";
+	printf " Right trim read from 5' end upto 5bp\n\n";	
+	printf "\nMinimum two options is required, 1. input_directory 2. file extension\n\n";
+	exit;
+else
+	printf "Error. Required atleast two parameters, 1. input_dir of read files, 2. extension of read files\n";
 fi
+
+
+if [ $# -ge 2 ]; then
+	echo "Provided more than 2"
+	 # Input directory and extenstionof read files
+	 
+	 if [ -d "$indir" ] && [ "$ext" = "$gzc" ]; then
+	 	cd $indir
+		 pwd
+			 ts=10
+  			pss="%"
+		 		for rfile in $(ls *fastq.gz); do   							   				 
+				  sleep .1
+				  ts=$((ts+=10))						 						 	
+					outfile=`echo $rfile | sed -e 's/.gz//g'`
+					printf "\nJob is still running, %d%s completed\n" "$ts" "$pss"							
+					zcat $rfile | fastq_quality_filter -q 25 -p 70 | fastx_clipper -l 16 -a $adp -M 10 | fastx_trimmer -f 2 -m 18 | fastx_trimmer -t 2 -m 18 | fastx_collapser -o $outfile\.fa																		printf "\nJob is 100%s completed!\n" "$pss"																																			 						 
+				done	
+	 fi
+	 
+fi 
