@@ -1,10 +1,10 @@
 #!/usr/bin/python -w
 
-################################################################################
+######################################################################################
 # This program performs the manual trimming and clipping of small RNA-Seq reads
 # Written by Ganesh Panzade
-# github private link : 
-################################################################################
+# github private link : https://github.com/gppbioinfo/ZLAB/blob/master/manualTrim.py
+######################################################################################
 
 import fileinput
 import sys
