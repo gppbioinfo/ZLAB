@@ -71,7 +71,7 @@ echo $i
 
 outname=`echo $i | sed -e 's/.fastq//'` 
 
-# Convert Fastq file into fasta format
+# Convert Fastq file into fasta format for filtered reads
 
 awk 'NR%4==1{a=substr($0,2);}NR%4==2{if(length($0) < 30) print ">"a"\n"$0}' ../$i > $outname\_filtered.fasta
 
